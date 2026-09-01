@@ -10,6 +10,10 @@ def main():
     print(f"Screen width: {SCREEN_WIDTH}")
     print(f"Screen height: {SCREEN_HEIGHT}")
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+
+    updatable = pygame.sprite.Group()
+    drawable = pygame.sprite.Group()
+    Player.containers = (updatable, drawable)
     player = Player(SCREEN_WIDTH/2, SCREEN_HEIGHT/2)
 
     while True:
@@ -18,7 +22,14 @@ def main():
             if event.type == pygame.QUIT:
                 return
         screen.fill("black")
-        player.draw(screen) #This has to happen after coloring the screen and before flipping it
+
+        #player.update(dt) Replaced to use Groups
+        for updateables in updatable:
+            updateables.update(dt)
+
+        #player.draw(screen) Replaced to use Groups
+        for drawables in drawable:
+            drawables.draw(screen) #This has to happen after coloring the screen and before flipping it
         pygame.display.flip()
 
         #Has to be last
